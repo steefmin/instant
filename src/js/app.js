@@ -77,15 +77,12 @@ function initHolder () {
 }
 
 function seed (file) {
-	console.log(file);
 	var client = new WebTorrent();
-	//TODO: create checkboxes for DHT / Tracker / Clearnet Trackers
-	//var trackers = setTrackers();
-	//client.seed(file, {announce: trackers}, onTorrentSeed);
-	client.seed(file, {announce:['ws://h.steefmin.xyz:8000']}, onTorrentSeed);
+	var trackers = setTrackers();
+	client.seed(file, {announce: trackers}, onTorrentSeed);
 }
 
-function setTrackers (hype, clearnet) {
+function setTrackers () {
 	var $hypetracker = $('#hypetracker');
 	var $cleartracker = $('#cleartracker');
 	var trackers = []
@@ -134,12 +131,10 @@ function initTorrent (torrent) {
 function download (hash) {
 	cleanBody();
 	var client = new WebTorrent();
-	//var trackers = setTrackers();
+	var trackers = setTrackers();
 	client.add({
 		infoHash: hash,
-		//TODO: create checkboxes for DHT / Tracker / Clearnet Trackers
-		//announce: trackers
-		announce: ['ws://h.steefmin.xyz:8000']
+		announce: trackers
 	}, onTorrentDownload);
 }
 
@@ -153,6 +148,11 @@ function onTorrentDownload (torrent) {
 // Clean holder body
 function cleanBody () {
   $('.holder').html('');
+}
+
+// Update trackers on click
+function updateTrackers () {
+	
 }
 
 // Callback function when torrent is seeding
