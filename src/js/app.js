@@ -40,10 +40,10 @@ function initHolder () {
 
   if (typeof window.FileReader === 'undefined') {
     $state.attr('id', 'fail')
-    $state.text('Instant Share indisponible')
+    $state.text('Instant Share Off-line')
   } else {
     $state.attr('id', 'success')
-    $state.text('Instant Share disponible')
+    $state.text('Instant Share On-line')
   }
 
   $holder.on('dragover', function (event) {
@@ -161,7 +161,7 @@ function onTorrentSeed (torrent) {
   updatePeer(torrent.numPeers)
   initTorrent(torrent)
   appendHolder(torrent)
-  prompt('Partager le lien:', document.location.hostname + '/#' + torrent.infoHash)
+  prompt('Share this link:', document.location.hostname + '/#' + torrent.infoHash)
   destroy(torrent)
 }
 
@@ -181,7 +181,7 @@ function showInputUrl (url) {
 // Show the download button for downloading the file
 function showDownloadButton (fileName, url) {
   var $but = $('.download-url')
-  $but.text('Télécharger ' + fileName)
+  $but.text('Download ' + fileName)
   $but.attr('href', url)
   $but.attr('download', fileName)
 }
