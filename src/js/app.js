@@ -1,5 +1,5 @@
 // Get Hash on hashchange
-$(window).bind('hashchange', function () {
+$(window).bind(	'hashchange', function () {
   getHash()
 })
 
@@ -82,7 +82,16 @@ function initHolder () {
 function seed (file) {
   console.log(file)
   var client = new WebTorrent()
-  client.seed(file, onTorrentSeed)
+  client.seed(file, {
+    announce: [
+      'ws://tracker.steefmin.xyz',
+      'ws://[fc0e:528c:fc27:ce74:ca46:24d6:c9f5:90d6]:8000',
+      'wss://tracker.btorrent.xyz',
+      'wss://tracker.fastcast.nz',
+      'wss://tracker.openwebtorrent.com',
+      'wss://tracker.webtorrent.io'
+    ]
+  }, onTorrentSeed)
 }
 
 // Initialise event on torrent
@@ -133,6 +142,8 @@ function download (hash) {
   client.add({
     infoHash: hash,
     announce: [
+      'ws://tracker.steefmin.xyz',
+      'ws://[fc0e:528c:fc27:ce74:ca46:24d6:c9f5:90d6]:8000',
       'wss://tracker.btorrent.xyz',
       'wss://tracker.fastcast.nz',
       'wss://tracker.openwebtorrent.com',
