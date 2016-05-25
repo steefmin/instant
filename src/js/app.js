@@ -100,6 +100,7 @@ function initTorrent (torrent) {
   var $holder = $('.holder')
   var $instructions = $('.instructions')
   var $progress = $('.torrent-infos .progress p')
+  console.log('local:  ' + torrent.client.peerId.toString('hex'))
 
   torrent.on('done', function () {
     console.log('torrent finished downloading')
@@ -111,6 +112,7 @@ function initTorrent (torrent) {
 
   torrent.on('wire', function (wire) {
     console.log('new peer: ' + wire.remoteAddress + ':' + wire.remotePort)
+    console.log(' with id: ' + wire.peerId)
     updatePeer(torrent.numPeers)
   })
 
