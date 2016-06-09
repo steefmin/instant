@@ -1,14 +1,23 @@
-// Get Hash on hashchange
-$(window).bind('hashchange', function () {
-  getHash()
-})
+var TRACKERS = [
+  'ws://torrent.lunik.xyz:8000',
+  'udp://torrent.lunik.xyz:8000',
+  'http://torrent.lunik.xyz:8000/announce',
+  'wss://tracker.webtorrent.io',
+  'udp://tracker.internetwarriors.net:1337',
+  'udp://tracker.leechers-paradise.org:6969',
+  'udp://tracker.coppersurfer.tk:6969',
+  'udp://exodus.desync.com:6969',
+  'wss://tracker.btorrent.xyz',
+  'wss://tracker.openwebtorrent.com',
+  'wss://tracker.fastcast.nz'
+]
 
-// Get Hash on loading page
-$(document).ready(function () {
-  initHolder()
-  initInfo()
-  getHash()
-})
+// turn magnet into hash
+function cleanHash (hash) {
+  var r = new RegExp('.*:')
+  var r2 = new RegExp('&.*')
+  return hash.replace(r, '').replace(r2, '')
+}
 
 // Get the hash and start torrent if there is an hash
 function getHash () {
@@ -22,13 +31,6 @@ function getHash () {
     $instructions.text('Fetching metadata')
     download(hash)
   }
-}
-
-// turn magnet into hash
-function cleanHash (hash) {
-  var r = new RegExp('.*:')
-  var r2 = new RegExp('&.*')
-  return hash.replace(r, '').replace(r2, '')
 }
 
 // Initialise seed torrent
@@ -65,7 +67,7 @@ function initHolder () {
     event.preventDefault()
     event.stopPropagation()
     var file = event.originalEvent.dataTransfer.files[0]
-    $holder.text(file.name)
+    updateFileName(file.name)
     seed(file)
   })
 
@@ -74,29 +76,29 @@ function initHolder () {
   })
 
   $uploadBut.on('change', function () {
-    $holder.text(this.files[0].name)
+    updateFileName(this.files[0].name)
     seed(this.files[0])
   })
-}
-
-function seed (file) {
-  console.log(file)
-  var client = new WebTorrent()
-  client.seed(file, onTorrentSeed)
 }
 
 // Initialise event on torrent
 function initTorrent (torrent) {
   var $holder = $('.holder')
   var $instructions = $('.instructions')
-  var $progress = $('.torrent-infos .progress p')
 
-  torrent.on('done', function () {
-    console.log('torrent finished downloading')
-    updatePeer(torrent.numPeers)
-    updateData(torrent.uploaded, torrent.downloaded, torrent.uploadSpeed, torrent.downloadSpeed)
-    $holder.css('background', '')
+  torrent.on('metadata', function () {
+    updateFileName(torrent.name)
+  })
+
+  torrent.on('ready', function () {
     appendHolder(torrent)
+  })
+
+  torrent.on('download', function (chunkSize) {
+    updateData(torrent.uploaded, torrent.downloaded, torrent.uploadSpeed, torrent.downloadSpeed)
+    updatePeer(torrent.numPeers)
+    updateProgress(Math.round(torrent.progress * 100))
+    $instructions.text('Downloading')
   })
 
   torrent.on('wire', function (wire) {
@@ -104,11 +106,11 @@ function initTorrent (torrent) {
     updatePeer(torrent.numPeers)
   })
 
-  torrent.on('download', function (chunkSize) {
-    updateData(torrent.uploaded, torrent.downloaded, torrent.uploadSpeed, torrent.downloadSpeed)
+  torrent.on('done', function () {
+    console.log('torrent finished downloading')
     updatePeer(torrent.numPeers)
-    $instructions.text('Downloading')
-    $progress.text(Math.round(torrent.progress * 10000) / 100 + '%')
+    updateData(torrent.uploaded, torrent.downloaded, torrent.uploadSpeed, torrent.downloadSpeed)
+    $holder.css('background', '')
   })
 
   torrent.on('upload', function (data) {
@@ -119,10 +121,10 @@ function initTorrent (torrent) {
 
   torrent.on('noPeers', function () {
     console.log('no peers')
-    $instructions.text('Seeding')
-    $progress.text(Math.round(torrent.progress * 10000) / 100 + '%')
     updateData(torrent.uploaded, torrent.downloaded, torrent.uploadSpeed, torrent.downloadSpeed)
     updatePeer(torrent.numPeers)
+    updateProgress(Math.round(torrent.progress * 100))
+    $instructions.text('Seeding')
   })
 }
 
@@ -130,22 +132,16 @@ function initTorrent (torrent) {
 function download (hash) {
   cleanBody()
   var client = new WebTorrent()
-  client.add({
+  var torrent = client.add({
     infoHash: hash,
-    announce: [
-      'wss://tracker.btorrent.xyz',
-      'wss://tracker.fastcast.nz',
-      'wss://tracker.openwebtorrent.com',
-      'wss://tracker.webtorrent.io'
-    ]
+    announce: TRACKERS
   }, onTorrentDownload)
+  initTorrent(torrent)
 }
 
 // Callback on torrent finish
 function onTorrentDownload (torrent) {
   console.log('Downloading ' + torrent.name)
-  initTorrent(torrent)
-  appendHolder(torrent)
   destroy(torrent)
 }
 
@@ -154,14 +150,24 @@ function cleanBody () {
   $('.holder').html('')
 }
 
+// Seed a file
+function seed (file) {
+  console.log(file)
+  var client = new WebTorrent()
+  var torrent = client.seed(file, {
+    announce: TRACKERS
+  }, onTorrentSeed)
+  initTorrent(torrent)
+}
+
 // Callback function when torrent is seeding
 function onTorrentSeed (torrent) {
   console.log('Seeding ' + torrent.name)
   console.log('Hash: ' + torrent.infoHash)
   updatePeer(torrent.numPeers)
-  initTorrent(torrent)
-  appendHolder(torrent)
-  prompt('Partager le lien:', document.location.hostname + '/#' + torrent.infoHash)
+  var link = document.location.hostname + document.location.pathname + '/#' + torrent.infoHash
+  link = link.replace(/\/+/g, '/')
+  prompt('Partager le lien:', link)
   destroy(torrent)
 }
 
@@ -188,63 +194,53 @@ function showDownloadButton (fileName, url) {
 
 // append a torrent to the holder
 function appendHolder (torrent) {
-  var $holder = $('.holder')
-  var $wrapper = $('.wrapper')
   torrent.files.forEach(function (file) {
-    var size = isShowable(file.name)
-    if (size.size) {
-      $holder.text('')
-      $wrapper.css({'width': size.size.toString() + size.type})
-      if (size.type === 'px') {
-        size.size = size.size - 100
+    file.appendTo('.holder', function (err) {
+      if (err) {
+        appendFileIcon(file.name.split('.')[file.name.split('.').length - 1])
+      } else {
+        $('.holder p').remove()
       }
-      $holder.css({'width': size.size.toString() + size.type, 'height': size.size.toString() + size.type})
-    }
-    file.appendTo('.holder')
+    })
     file.getBlobURL(function (err, url) {
       if (err) {
         console.log(err)
       }
       showDownloadButton(file.name, url)
-      showInputUrl(document.location.hostname + '/#' + torrent.infoHash)
+      var link = document.location.hostname + document.location.pathname + '/#' + torrent.infoHash
+      link = link.replace(/\/+/g, '/')
+      showInputUrl(link)
     })
   })
 }
 
-// check if file is showable by extention
-function isShowable (filename) {
-  var res = filename.split('.')
-  var size = {size: false, type: 'px'}
-  switch (res[res.length - 1]) {
-    case 'webm':
-    case 'mp4':
-      size.size = 100
-      size.type = '%'
-      break
-    case 'pdf':
-      size.size = 900
-      break
-    case 'jpg':
-    case 'jpeg':
-    case 'png':
-    case 'gif':
-    case 'tif':
-    case 'tiff':
-    case 'txt':
-    case 'svg':
-      size.size = 500
-      break
-    default:
-      size.size = false
-      break
+function appendFileIcon (extention) {
+  if ($('.file-icon').length <= 0) {
+    var $icon = $('<i>').addClass('file-icon fa fa-5x')
+    switch (extention) {
+      case 'zip':
+      case 'rar':
+      case 'tar':
+      case 'gz':
+        $icon.addClass('fa-file-archive-o')
+        break
+
+      case 'avi':
+      case 'mkv':
+      case 'mov':
+        $icon.addClass('fa-file-video-o')
+        break
+
+      default:
+        $icon.addClass('fa-file-o')
+    }
+    $icon.appendTo('.holder')
   }
-  return size
 }
 
 // initialize values for torrent info
 function initInfo () {
-  var $progress = $('.torrent-infos .progress p')
-  $progress.text('0%')
+  updateProgress(0)
   updateData(0, 0, 0, 0)
   updatePeer(0)
 }
@@ -252,7 +248,9 @@ function initInfo () {
 // bytes to formated data
 function formatData (bytes) {
   var sizes = ['B', 'kB', 'MB', 'GB', 'TB']
-  if (bytes === 0) return '0 B'
+  if (bytes === 0) {
+    return '0 B'
+  }
   var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10)
   return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i]
 }
@@ -260,9 +258,21 @@ function formatData (bytes) {
 // bits to formated speed
 function formatSpeed (bits) {
   var sizes = ['b/s', 'kb/s', 'Mb/s', 'Gb/s', 'Tb/s']
-  if (bits === 0) return '0 b/s'
+  if (bits === 0) {
+    return '0 b/s'
+  }
   var i = parseInt(Math.floor(Math.log(bits) / Math.log(1024)), 10)
   return Math.round(bits / Math.pow(1024, i), 2) + ' ' + sizes[i]
+}
+
+function updateFileName (name) {
+  var $holder = $('.holder')
+  $holder.html($('<p>').text(name))
+}
+// Update progress percentage
+function updateProgress (percent) {
+  var $progress = $('.torrent-infos .progress p')
+  $progress.text(percent + '%')
 }
 
 // Update value of peer
@@ -278,3 +288,15 @@ function updateData (upBytes, downBytes, upSpeed, downSpeed) {
   var $downData = $('.torrent-infos .downloaded-data p')
   $downData.text(formatData(downBytes) + ' @' + formatSpeed(downSpeed))
 }
+
+// Get Hash on hashchange
+$(window).bind('hashchange', function () {
+  getHash()
+})
+
+// Get Hash on loading page
+$(document).ready(function () {
+  initHolder()
+  initInfo()
+  getHash()
+})
