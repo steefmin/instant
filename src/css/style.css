@@ -1,180 +1,179 @@
-@font-face{
-	font-family:'FontAwesome';
-	src:url('../fonts/fontawesome-webfont.woff2') format('woff2');
-	font-weight:normal;
-	font-style:normal;
+@font-face {
+	font-family: 'FontAwesome';
+	src: url('../fonts/fontawesome-webfont.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
 }
+
 body {
-    font: normal 16px/20px "Helvetica Neue", Helvetica, sans-serif;
-    background: #111;
-    margin: 0;
-    padding: 0;
-    color: #fff;
+	font: normal 16px/20px "Helvetica Neue", Helvetica, sans-serif;
+	background: #111;
+	margin: 0;
+	padding: 0;
+	color: #fff;
 }
+
 a {
-    color: #F7A253;
-}
-a:hover, a:focus, a:active {
-    color: #F75353;
+	color: #F7A253;
 }
 
-
+a:hover,
+a:focus,
+a:active {
+	color: #F75353;
+}
 /***********/
-
-
 /* Wrapper */
-
-
 /***********/
 
 .wrapper {
-    width: 500px;
-    margin: 0 auto;
-    text-align: center;
+	width: 500px;
+	margin: 0 auto;
+	text-align: center;
 }
-.wrapper .status-link , .wrapper .status-link:hover, .wrapper .status-link:focus, .status-link .wrapper:active{
-    color: white;
-    text-decoration:none;
+
+.wrapper .status-link,
+.wrapper .status-link:hover,
+.wrapper .status-link:focus,
+.status-link .wrapper:active {
+	color: white;
+	text-decoration: none;
 }
+
 .wrapper p {
-    font-weight: bold;
+	font-weight: bold;
 }
-.wrapper .description p{
-    font-weight: normal;
+
+.wrapper .description p {
+	font-weight: normal;
 }
+
 .wrapper .description a {
-    text-decoration:underline;
-    color: #F7A253;
-}
-.wrapper .description a:hover, a:focus, a:active {
-    text-decoration:underline;
-    color: #F75353;
+	text-decoration: underline;
+	color: #F7A253;
 }
 
-
+.wrapper .description a:hover,
+a:focus,
+a:active {
+	text-decoration: underline;
+	color: #F75353;
+}
 /***********/
-
-
 /*  Status */
-
-
 /***********/
 
 .status {
-    font-weight:bold;
-    font-size: 16pt;
-    padding: 15px;
-    background: #ccc;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    color: white;
-    text-decoration:none;
-}
-.status#fail, .status#offline {
-    background: #F75353;
-}
-.status#success, .status#online {
-    background: #27AE60;
+	font-weight: bold;
+	font-size: 16pt;
+	padding: 15px;
+	background: #ccc;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	color: white;
+	text-decoration: none;
 }
 
+.status#fail,
+.status#offline {
+	background: #F75353;
+}
 
+.status#success,
+.status#online {
+	background: #27AE60;
+}
 /***********/
-
-
 /* Holder  */
-
-
 /***********/
 
 .holder {
-    border: 10px dashed #ccc;
-    width: 400px;
-    height: 400px;
-    margin: 20px auto;
-    overflow: hidden;
-    -moz-border-radius: 40px;
-    -webkit-border-radius: 40px;
-    border-radius: 40px;
+	border: 10px dashed #ccc;
+	width: 400px;
+	height: 400px;
+	margin: 20px auto;
+	overflow: hidden;
+	-moz-border-radius: 40px;
+	-webkit-border-radius: 40px;
+	border-radius: 40px;
 }
+
 .holder#hover {
-    border: 10px dashed red;
+	border: 10px dashed red;
 }
+
 .holder * {
-    width: 100%;
-    height: 100%;
+	width: 100%;
+	height: 100%;
 }
+
 .holder .upload-but {
-    display: none;
+	display: none;
 }
+
 .holder .upload {
-    width: auto;
-    height: auto;
-    vertical-align: middle;
-    text-align: center;
-    cursor: pointer;
+	width: auto;
+	height: auto;
+	vertical-align: middle;
+	text-align: center;
+	cursor: pointer;
 }
+
 .holder .upload .button {
-    padding: 175px 0px 175px 0px;
-    font-size: 80px;
-    margin: 0px;
+	padding: 175px 0px 175px 0px;
+	font-size: 80px;
+	margin: 0px;
 }
-
-
 /******************/
-
-
 /* Torrent Infos  */
-
-
 /******************/
 
-.torrent-infos *{
-  font-family: FontAwesome;
-  display: inline-block;
+.torrent-infos * {
+	font-family: FontAwesome;
+	display: inline-block;
 }
+
 input[name=url] {
-    text-align: center;
-    width: 400px;
-    height: 15px;
-    padding: 5px;
-    border: 1px solid grey;
-    border-radius: 5px;
+	text-align: center;
+	width: 400px;
+	height: 15px;
+	padding: 5px;
+	border: 1px solid grey;
+	border-radius: 5px;
 }
+
 .torrent-infos p {
-  font-family: sans-serif;
-  font-weight: 500;
+	font-family: sans-serif;
+	font-weight: 500;
 }
+
 .torrent-infos .peer {
-    padding: 10px;
+	padding: 10px;
 }
+
 .torrent-infos .progress {
 	padding: 10px;
 }
-.torrent-infos .uploaded-data span{
-  color: #F75353;
-}
-.torrent-infos .downloaded-data span{
-  color: #32C8DE;
+
+.torrent-infos .uploaded-data span {
+	color: #F75353;
 }
 
-
+.torrent-infos .downloaded-data span {
+	color: #32C8DE;
+}
 /***********/
-
-
 /* Footer  */
-
-
 /***********/
 
-.footer{
-  position: fixed;
-  bottom: 0px;
-  left: 16px;
-
-  font-size: 12px;
-}
-.footer p{
-  margin: 0px;
+.footer {
+	position: fixed;
+	bottom: 0px;
+	left: 16px;
+	font-size: 12px;
 }
 
+.footer p {
+	margin: 0px;
+}
