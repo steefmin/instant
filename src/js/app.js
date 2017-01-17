@@ -142,8 +142,7 @@ function initTorrent (torrent) {
 function download (hash) {
   cleanBody()
   var client = new WebTorrent()
-  client.add({
-    infoHash: hash,
+  client.add(hash, {
     announce: [
       'ws://tracker.steefmin.xyz',
       'ws://[fc0e:528c:fc27:ce74:ca46:24d6:c9f5:90d6]:8000',
