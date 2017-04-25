@@ -190,6 +190,7 @@ function destroy (torrent) {
 function showInputUrl (url) {
   $('.url-input').val(url)
   $('.share-link').show()
+  $('#qrcode').html('')
   new QRCode(document.getElementById("qrcode"), url)
 }
 
