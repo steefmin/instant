@@ -131,7 +131,7 @@ a:active {
 }
 
 #qrcode img {
-  display: inline;
+  display: inline-block;
 }
 
 /******************/
