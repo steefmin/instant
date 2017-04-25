@@ -120,6 +120,13 @@ a:hover, a:focus, a:active {
     margin: 0px;
 }
 
+#qrcode {
+  margin: 10px;
+}
+
+#qrcode img {
+  display: inline;
+}
 
 /******************/
 
@@ -177,4 +184,3 @@ input[name=url] {
 .footer p{
   margin: 0px;
 }
-
