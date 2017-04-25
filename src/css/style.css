@@ -125,6 +125,15 @@ a:active {
 	font-size: 80px;
 	margin: 0px;
 }
+
+#qrcode {
+  margin: 10px;
+}
+
+#qrcode img {
+  display: inline;
+}
+
 /******************/
 /* Torrent Infos  */
 /******************/
