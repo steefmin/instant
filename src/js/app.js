@@ -1,5 +1,5 @@
 // Get Hash on hashchange
-$(window).bind(	'hashchange', function () {
+$(window).bind('hashchange', function () {
   getHash()
 })
 
@@ -190,6 +190,7 @@ function destroy (torrent) {
 function showInputUrl (url) {
   $('.url-input').val(url)
   $('.share-link').show()
+  new QRCode(document.getElementById("qrcode"), url)
 }
 
 // Show the download button for downloading the file
