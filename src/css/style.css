@@ -128,9 +128,6 @@ a:active {
 
 #qrcode {
   margin: 10px;
-}
-
-#qrcode img {
   display: inline-block;
 }
 
