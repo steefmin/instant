@@ -198,7 +198,7 @@ input[name=url] {
 
 /* The actual popup */
 .popup .popuptext {
-    visibility: hidden;
+    display:none;
     width: 160px;
     background-color: #888;
     color: #fff;
@@ -224,20 +224,3 @@ input[name=url] {
     border-color: #555 transparent transparent transparent;
 }
 
-/* Toggle this class - hide and show the popup */
-.popup .show {
-    visibility: visible;
-    -webkit-animation: fadeIn 1s;
-    animation: fadeIn 1s;
-}
-
-/* Add animation (fade in the popup) */
-@-webkit-keyframes fadeIn {
-    from {opacity: 0;} 
-    to {opacity: 1;}
-}
-
-@keyframes fadeIn {
-    from {opacity: 0;}
-    to {opacity:1 ;}
-}
