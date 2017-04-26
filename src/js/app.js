@@ -194,7 +194,7 @@ function showInputUrl (url) {
   $('.copy-but').click(function(){
     $('.url-input').select()
     document.execCommand("copy")
-    $('.popuptext').classList.toggle("show");
+    $('.popuptext').show().delay(1000).toggle(1000)
   })
   new QRCode(document.getElementById("qrcode"), url)
 }
