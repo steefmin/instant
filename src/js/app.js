@@ -192,9 +192,9 @@ function showInputUrl (url) {
   $('.share-link').show()
   $('#qrcode').html('')
   $('.copy-but').click(function(){
-    $('.url-input').val().select()
+    $('.url-input').select()
     document.execCommand("copy")
-    prompt('Link copied')
+    $('.popuptext').classList.toggle("show");
   })
   new QRCode(document.getElementById("qrcode"), url)
 }
