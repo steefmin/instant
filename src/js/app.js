@@ -175,7 +175,7 @@ function onTorrentSeed (torrent) {
   updatePeer(torrent.numPeers)
   initTorrent(torrent)
   appendHolder(torrent)
-  prompt('Share this link:', document.location.hostname + '/#' + torrent.infoHash)
+//  prompt('Share this link:', document.location.hostname + '/#' + torrent.infoHash)
   destroy(torrent)
 }
 
@@ -191,6 +191,11 @@ function showInputUrl (url) {
   $('.url-input').val(url)
   $('.share-link').show()
   $('#qrcode').html('')
+  $('.copy-but').onclick(function(){
+    $('.url-input').val().select()
+    document.execCommand("copy")
+    prompt('Link copied')
+  })
   new QRCode(document.getElementById("qrcode"), url)
 }
 
