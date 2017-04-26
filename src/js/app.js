@@ -191,7 +191,7 @@ function showInputUrl (url) {
   $('.url-input').val(url)
   $('.share-link').show()
   $('#qrcode').html('')
-  $('.copy-but').onclick(function(){
+  $('.copy-but').click(function(){
     $('.url-input').val().select()
     document.execCommand("copy")
     prompt('Link copied')
