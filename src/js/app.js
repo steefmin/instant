@@ -84,6 +84,7 @@ function seed (file) {
   var client = new WebTorrent()
   client.seed(file, {
     announce: [
+      'http://tracker.steefmin.xyz',
       'ws://tracker.steefmin.xyz',
       'ws://[fc0e:528c:fc27:ce74:ca46:24d6:c9f5:90d6]:8000',
       'ws://torrent.lunik.xyz:8000',
