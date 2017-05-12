@@ -192,12 +192,12 @@ function showInputUrl (url) {
   $('.url-input').val(url)
   $('.share-link').show()
   $('#qrcode').html('')
-  $('.copy-but').click(function(){
+  $('.copy-but').click(function () {
     $('.url-input').select()
-    document.execCommand("copy")
+    document.execCommand('copy')
     $('.popuptext').show().delay(1000).toggle(1000)
   })
-  new QRCode(document.getElementById("qrcode"), url)
+  QRCode(document.getElementById('qrcode'), url)
 }
 
 // Show the download button for downloading the file
